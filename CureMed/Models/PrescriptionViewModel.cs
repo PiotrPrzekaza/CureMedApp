@@ -2,9 +2,9 @@
 
 namespace CureMed.Models
 {
-    public class DoctorViewModel
+    public class PrescriptionViewModel
     {
         public string Name { get; set; }
-        public List<PrescriptionViewModel> Prescriptions { get; set; }
+        public List<MedicineViewModel> Medicines { get; set; }
     }
 }
