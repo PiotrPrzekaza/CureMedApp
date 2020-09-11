@@ -1,8 +1,45 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model DoctorViewModel
+@{
+    ViewData["Title"] = "Prescription Page";
 }
 
+<div>
+    Doctor's data:
+    Name: @Model.Name
+</div>
+<form asp-controller="Prescription" asp-action="Index">
+    <input type="text" name="ContentSearch" />
+    <button type="submit" class="btn btn-success">Search</button>
+</form>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    #
+                </th>
+                <th scope="col">
+                    Name
+                </th>
+                <th scope="col">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prescription in Model.Prescriptions)
+            {
+                <tr>
+                    <th scope="row">@(Model.Prescriptions.IndexOf(prescription)+1)</th>
+                    <td>@prescription.Name</td>
+                    <td>
+                        <a asp-area="" asp-controller="Prescription" asp-action="View" asp-route-indexOfPrescription="@Model.Prescriptions.IndexOf(prescription)">View</a>
+                        |
+                        <a asp-area="" asp-controller="Prescription" asp-action="Delete" asp-route-indexOfPrescription="@Model.Prescriptions.IndexOf(prescription)">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
