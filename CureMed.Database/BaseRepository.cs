@@ -1,17 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CureMed.Database
 {
     public abstract class  BaseRepository<Entity> where Entity : class
     {
-        protected CureMedDbContext _DbContext;
+        protected CureMedAppDbContext _DbContext;
 
         protected abstract DbSet<Entity> DbSet { get; }
 
-        public BaseRepository(CureMedDbContext dbContext)
+        public BaseRepository(CureMedAppDbContext dbContext)
         {
             _DbContext = dbContext;
         }
