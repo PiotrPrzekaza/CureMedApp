@@ -5,7 +5,7 @@ namespace CureMed.Database
 {
     public class CureMedAppDbContext : DbContext
     {
-        //public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
         public CureMedAppDbContext(DbContextOptions options) : base(options)
         {
 
