@@ -4,14 +4,16 @@ using CureMed.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CureMed.Database.Migrations
 {
     [DbContext(typeof(CureMedAppDbContext))]
-    partial class CureMedAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200912120927_AddedPrescrtiptionsTable")]
+    partial class AddedPrescrtiptionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,44 +48,6 @@ namespace CureMed.Database.Migrations
                     b.ToTable("Doctors");
                 });
 
-            modelBuilder.Entity("CureMed.Database.Entites.Medicine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ActiveSubstance")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PrescriptionId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PrescriptionId");
-
-                    b.ToTable("Medicines");
-                });
-
             modelBuilder.Entity("CureMed.Database.Entites.Prescription", b =>
                 {
                     b.Property<int>("Id")
@@ -105,15 +69,6 @@ namespace CureMed.Database.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("Prescriptions");
-                });
-
-            modelBuilder.Entity("CureMed.Database.Entites.Medicine", b =>
-                {
-                    b.HasOne("CureMed.Database.Entites.Prescription", "Prescription")
-                        .WithMany()
-                        .HasForeignKey("PrescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CureMed.Database.Entites.Prescription", b =>
