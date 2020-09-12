@@ -4,7 +4,10 @@ using System.Text;
 
 namespace CureMed.Database.Entites
 {
-    class Prescription
+    public class Prescription
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime CraetedDate { get; set; }
     }
 }
