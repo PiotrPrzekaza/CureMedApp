@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace CureMed.Database.Entites
@@ -13,5 +14,8 @@ namespace CureMed.Database.Entites
         public string PhoneNumber { get; set; }
         public int WorkYears { get; set; }
         public bool IsAbleToMakePrescriptions { get; set; }
+
+        [NotMapped]
+        public virtual List<Prescription> Prescriptions { get; set; }
     }
 }
