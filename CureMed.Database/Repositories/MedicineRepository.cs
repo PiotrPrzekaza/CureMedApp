@@ -1,5 +1,8 @@
 ﻿using CureMed.Database.Entites;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CureMed.Database
 {
@@ -10,6 +13,11 @@ namespace CureMed.Database
         public MedicineRepository(CureMedAppDbContext dbContext) : base(dbContext)
         {
 
+        }
+
+        public IEnumerable<Medicine> GetAllMedicines()
+        {
+            return DbSet.Select(x => x);
         }
     }
 }

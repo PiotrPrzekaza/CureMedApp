@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CureMed.Database
 {
-    public abstract class  BaseRepository<Entity> where Entity : class
+    public abstract class  BaseRepository<Entity> where Entity : BaseEntity
     {
         protected CureMedAppDbContext _DbContext;
 
@@ -25,9 +26,28 @@ namespace CureMed.Database
             return list;
         }
 
-        public void SaveChanges()
+        public bool AddNew(Entity entity)
         {
-            _DbContext.SaveChanges();
+            DbSet.Add(entity);
+
+            return SaveChanges();
+        }
+        public bool Delete(Entity entity)
+        {
+            var foundEntity = DbSet.FirstOrDefault(x => x.Id == entity.Id);
+
+            if (foundEntity == null)
+            {
+                DbSet.Remove(entity);
+                return SaveChanges();
+            }
+
+            return false;
+        }
+        public bool SaveChanges()
+        {
+
+            return _DbContext.SaveChanges() > 0;
         }
 
     }
