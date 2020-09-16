@@ -1,3 +1,5 @@
+using CureMed.Core;
+using CureMed.Core.Iterfaces;
 using CureMed.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +26,15 @@ namespace CureMed
             services.AddControllersWithViews();
             services.AddDbContext<CureMedAppDbContext>(options => 
                     options.UseSqlServer("Server=.;Database=CureMedDatabase;Trusted_Connection=True;"));
+
+
+            services.AddTransient<IDoctorRepository, DoctorRepository>();
+            services.AddTransient<IPrescriptionRepository, PrescriptionRepository>();
+            services.AddTransient<IMedicineRepository, MedicineRepository>();
+
+            services.AddTransient<DtoMapper>();
+            services.AddTransient<IDoctorManager, DoctorManager>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
