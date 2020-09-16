@@ -33,6 +33,7 @@ namespace CureMed
             services.AddTransient<IMedicineRepository, MedicineRepository>();
 
             services.AddTransient<DtoMapper>();
+            services.AddTransient<ViewModelMapper>();
             services.AddTransient<IDoctorManager, DoctorManager>();
             
         }
