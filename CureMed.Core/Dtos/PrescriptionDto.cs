@@ -10,6 +10,6 @@ namespace CureMed.Core
         public string Name { get; set; }
         public DateTime CraetedDate { get; set; }
         public DoctorDto Doctor { get; set; }
-        public List<MedicineDto> Medicines { get; set; }
+        public IEnumerable<MedicineDto> Medicines { get; set; }
     }
 }

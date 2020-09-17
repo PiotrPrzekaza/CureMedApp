@@ -9,6 +9,6 @@ namespace CureMed.Models
         public string Name { get; set; }
         public DateTime CraetedDate { get; set; }
         public DoctorViewModel Doctor { get; set; }
-        public List<MedicineViewModel> Medicines { get; set; }
+        public IEnumerable<MedicineViewModel> Medicines { get; set; }
     }
 }

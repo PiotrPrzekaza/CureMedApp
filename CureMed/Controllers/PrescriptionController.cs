@@ -1,4 +1,6 @@
-﻿using CureMed.Models;
+﻿using CureMed.Core;
+using CureMed.Core.Iterfaces;
+using CureMed.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -6,28 +8,28 @@ namespace CureMed.Controllers
 {
     public class PrescriptionController : Controller
     {
-        private int IndexOfDoctor { get; set; } 
+        private readonly IDoctorManager _DoctorManager;
+        private readonly ViewModelMapper _ViewModelMapper;
+        private int DoctorId { get; set; }
 
-       
-        public PrescriptionController()
+
+        public PrescriptionController(IDoctorManager doctorManager, ViewModelMapper viewModelMapper)
         {
-
+            _DoctorManager = doctorManager;
+            _ViewModelMapper = viewModelMapper;
         }
-        public IActionResult Index(int indexOfDoctor, string contentSearch)
+        public IActionResult Index(int doctorId, string filterString)
         {
-            IndexOfDoctor = indexOfDoctor;
+            DoctorId = doctorId;
 
-            if (string.IsNullOrEmpty(contentSearch))
-            {
-                return View(FakeDatabase.Doctors.ElementAt(indexOfDoctor));
-            }
+            var doctorDto = _DoctorManager.GetAllDoctors(null).FirstOrDefault(x => x.Id == doctorId);
+            var prescriptionDtos = _DoctorManager.GetAllPrescriptionForADoctor(doctorId, filterString);
 
-            return View(new DoctorViewModel
-            {
-                Name = FakeDatabase.Doctors.ElementAt(indexOfDoctor).Name,
-                Prescriptions = FakeDatabase.Doctors.ElementAt(indexOfDoctor).Prescriptions.Where(x=>x.Name.Contains(contentSearch)).ToList()
-            });
-            
+            var doctorViewModel = _ViewModelMapper.Map(doctorDto);
+
+           doctorViewModel.Prescriptions = _ViewModelMapper.Map(prescriptionDtos);
+
+            return View(doctorViewModel);
         }
         public IActionResult Add()
         {
@@ -37,17 +39,20 @@ namespace CureMed.Controllers
         [HttpPost]
         public IActionResult Add(PrescriptionViewModel prescriptionVM)
         {
-            FakeDatabase.Doctors.ElementAt(IndexOfDoctor).Prescriptions.Add(prescriptionVM);
+            var dto = _ViewModelMapper.Map(prescriptionVM);
+
+            _DoctorManager.AddNewPrescription(dto, DoctorId);
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult View(int indexOfPrescription)
+        public IActionResult View(int prescriptionId)
         {
-            return RedirectToAction("Index", "Medicine", new { indexOfDoctor = IndexOfDoctor, indexOfPrescription = indexOfPrescription }) ;
+            return RedirectToAction("Index", "Medicine", new { doctorId = DoctorId, prescriptionId = prescriptionId }) ;
         }
-        public IActionResult Delete(int indexOfPrescription)
+        public IActionResult Delete(int prescriptionId)
         {
+            _DoctorManager.DeletePrescription(new PrescriptionDto { Id = prescriptionId });
             return View();
         }
     }

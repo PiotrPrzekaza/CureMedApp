@@ -1,4 +1,6 @@
-﻿using CureMed.Models;
+﻿using CureMed.Core;
+using CureMed.Core.Iterfaces;
+using CureMed.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +9,23 @@ namespace CureMed.Controllers
 {
     public class HomeController : Controller
     {
-      
-        public HomeController()
-        {
+        private readonly IDoctorManager _DoctorManager;
+        private readonly ViewModelMapper _ViewModelMapper;
 
-        }
-        public IActionResult Index(string contentSearch)
-        {
-            if (string.IsNullOrEmpty(contentSearch))
-            {
-                return View(FakeDatabase.Doctors);
-            }
 
-            return View(FakeDatabase.Doctors.Where(x => x.Name.Contains(contentSearch)).ToList());
+        public HomeController(IDoctorManager doctorManager, ViewModelMapper viewModelMapper)
+        {
+            _DoctorManager = doctorManager;
+            _ViewModelMapper = viewModelMapper;
         }
+        public IActionResult Index(string filterString)
+        {
+          
+            var doctorDtos = _DoctorManager.GetAllDoctors(filterString);
+            var doctorViewModel = _ViewModelMapper.Map(doctorDtos);
+            return View(doctorViewModel);
+        }
+        
         public IActionResult Add()
         {
             return View();
@@ -29,17 +34,22 @@ namespace CureMed.Controllers
         [HttpPost]
         public IActionResult Add(DoctorViewModel doctorVM)
         {
-            FakeDatabase.Doctors.Add(doctorVM);
+            var dto = _ViewModelMapper.Map(doctorVM);
+
+            _DoctorManager.AddNewDoctor(dto);
 
             return RedirectToAction("Index");
         }
-        public IActionResult View(int indexOfDoctor)
+        public IActionResult View(int doctorId)
         {
-            return RedirectToAction("Index", "Prescription", new {indexOfDoctor = indexOfDoctor });
+            return RedirectToAction("Index", "Prescription", new {doctorId = doctorId });
         }
-        public IActionResult Delete(int indexOfDoctor)
+        public IActionResult Delete(int doctorId)
         {
-            return View(FakeDatabase.Doctors);
+            _DoctorManager.DeleteDoctor(new DoctorDto{ Id=doctorId});
+            var doctorDtos = _DoctorManager.GetAllDoctors(null);
+            var doctorViewModel = _ViewModelMapper.Map(doctorDtos);
+            return View(doctorViewModel);
         }
     }
 }

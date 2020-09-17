@@ -1,4 +1,6 @@
-﻿using CureMed.Models;
+﻿using CureMed.Core;
+using CureMed.Core.Iterfaces;
+using CureMed.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -6,27 +8,29 @@ namespace CureMed.Controllers
 {
     public class MedicineController : Controller
     {
-        private int IndexOfDoctor { get; set; }
-        private int IndexOfPrescription { get; set; }
+        private readonly IDoctorManager _DoctorManager;
+        private readonly ViewModelMapper _ViewModelMapper;
+        private int DoctorId { get; set; }
+        private int PrescriptionId { get; set; }
 
-        public MedicineController()
+        public MedicineController(IDoctorManager doctorManager, ViewModelMapper viewModelMapper)
         {
-
+            _DoctorManager = doctorManager;
+            _ViewModelMapper = viewModelMapper;
         }
-        public IActionResult Index(int indexOfDoctor, int indexOfPrescription, string contentSearch)
+        public IActionResult Index(int doctorId, int prescriptionId, string filterString)
         {
-            IndexOfDoctor = indexOfDoctor;
-            IndexOfPrescription = indexOfPrescription;
+            DoctorId = doctorId;
+            PrescriptionId = prescriptionId;
 
-            if (string.IsNullOrEmpty(contentSearch))
-            {
-                return View(FakeDatabase.Doctors.ElementAt(indexOfDoctor).Prescriptions.ElementAt(indexOfPrescription));
-            }
-            return View(new PrescriptionViewModel
-            {
-                Name = FakeDatabase.Doctors.ElementAt(indexOfDoctor).Prescriptions.ElementAt(indexOfPrescription).Name,
-                Medicines = FakeDatabase.Doctors.ElementAt(indexOfDoctor).Prescriptions.ElementAt(indexOfPrescription).Medicines.Where(x => x.Name.Contains(contentSearch)).ToList()
-            }) ;
+            var prescriptionDto = _DoctorManager.GetAllPrescriptionForADoctor(doctorId, null).FirstOrDefault(x => x.Id == prescriptionId);
+            var medicineDtos = _DoctorManager.GetAllMedicineForAPrescription(prescriptionId, filterString);
+            
+            var prescriptionViewModel = _ViewModelMapper.Map(prescriptionDto);
+
+            prescriptionViewModel.Medicines = _ViewModelMapper.Map(medicineDtos);
+
+            return View(prescriptionViewModel) ;
         }
 
         public IActionResult Add()
@@ -37,13 +41,16 @@ namespace CureMed.Controllers
         [HttpPost]
         public IActionResult Add(MedicineViewModel medicineVM)
         {
-            FakeDatabase.Doctors.ElementAt(IndexOfDoctor).Prescriptions.ElementAt(IndexOfPrescription).Medicines.Add(medicineVM);
+            var dto = _ViewModelMapper.Map(medicineVM);
+
+            _DoctorManager.AddNewMedicine(dto, PrescriptionId);
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult Delete(int indexOfMedicine)
+        public IActionResult Delete(int medicineId)
         {
+            _DoctorManager.DeleteMedicine(new MedicineDto { Id = medicineId });
             return View();
         }
     }
