@@ -16,6 +16,6 @@ namespace CureMed.Database.Entites
         public bool IsAbleToMakePrescriptions { get; set; }
 
         [NotMapped]
-        public virtual IEnumerable<Prescription> Prescriptions { get; set; }
+        public virtual List<Prescription> Prescriptions { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace CureMed.Controllers
         private readonly IDoctorManager _DoctorManager;
         private readonly ViewModelMapper _ViewModelMapper;
         private int DoctorId { get; set; }
-        private int PrescriptionId { get; set; }
+      
 
         public MedicineController(IDoctorManager doctorManager, ViewModelMapper viewModelMapper)
         {
@@ -20,15 +20,15 @@ namespace CureMed.Controllers
         }
         public IActionResult Index(int doctorId, int prescriptionId, string filterString)
         {
-            DoctorId = doctorId;
-            PrescriptionId = prescriptionId;
 
+            TempData["PrescriptionId"] = prescriptionId;
+            TempData["DoctorId"] = doctorId;
             var prescriptionDto = _DoctorManager.GetAllPrescriptionForADoctor(doctorId, null).FirstOrDefault(x => x.Id == prescriptionId);
             var medicineDtos = _DoctorManager.GetAllMedicineForAPrescription(prescriptionId, filterString);
             
             var prescriptionViewModel = _ViewModelMapper.Map(prescriptionDto);
 
-            prescriptionViewModel.Medicines = _ViewModelMapper.Map(medicineDtos);
+            prescriptionViewModel.Medicines = _ViewModelMapper.Map(medicineDtos).ToList();
 
             return View(prescriptionViewModel) ;
         }
@@ -43,15 +43,15 @@ namespace CureMed.Controllers
         {
             var dto = _ViewModelMapper.Map(medicineVM);
 
-            _DoctorManager.AddNewMedicine(dto, PrescriptionId);
+            _DoctorManager.AddNewMedicine(dto, int.Parse(TempData["PrescriptionId"].ToString()));
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new {doctorId = int.Parse(TempData["DoctorId"].ToString()) ,prescriptionId = int.Parse(TempData["PrescriptionId"].ToString()) });
         }
 
         public IActionResult Delete(int medicineId)
         {
             _DoctorManager.DeleteMedicine(new MedicineDto { Id = medicineId });
-            return View();
+            return RedirectToAction("Index", new { doctorId = int.Parse(TempData["DoctorId"].ToString()), prescriptionId = int.Parse(TempData["PrescriptionId"].ToString()) });
         }
     }
 }

@@ -4,8 +4,10 @@
 }
 
 <div>
-    Prescription's data:
-    Name: @Model.Name
+    Prescription's data:<br/>
+    Id: @Model.Id<br />
+    Name: @Model.Name<br />
+    Created Date: @Model.CraetedDate<br />
 </div>
 <form asp-controller="Medicine" asp-action="Index">
     <input type="text" name="ContentSearch" />
@@ -24,6 +26,27 @@
                     Name
                 </th>
                 <th scope="col">
+                    CompanyName
+                </th>
+                <th scope="col">
+                    ActiveSubstance
+                </th>
+                <th scope="col">
+                    Weight
+                </th>
+                <th scope="col">
+                    Price
+                </th>
+                <th scope="col">
+                    Amount
+                </th>
+                <th scope="col">
+                    TotalPrice
+                </th>
+                <th scope="col">
+                    ExpirationDate
+                </th>
+                <th scope="col">
                     Action
                 </th>
             </tr>
@@ -34,6 +57,14 @@
                 <tr>
                     <th scope="row">@medicine.Id</th>
                     <td>@medicine.Name</td>
+                    <td>@medicine.CompanyName</td>
+                    <td>@medicine.ActiveSubstance</td>
+                    <td>@medicine.Weight</td>
+                    <td>@medicine.Price</td>
+                    <td>@medicine.Amount</td>
+                    <td>@medicine.TotalPrice</td>
+                    <td>@medicine.ExpirationDate</td>
+                    
                     <td>
                         <a asp-area="" asp-controller="Medicine" asp-action="Delete" asp-route-medcineId="@medicine.Id">Delete</a>
                     </td>

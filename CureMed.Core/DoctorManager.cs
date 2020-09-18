@@ -28,42 +28,45 @@ namespace CureMed.Core
             _DtoMapper = dtoMapper;
         }
 
-        public IEnumerable<DoctorDto> GetAllDoctors(string filterString)
+        public List<DoctorDto> GetAllDoctors(string filterString)
         {
-            var doctorEntities = _DoctorRepository.GetAllDoctors();
+            var doctorEntities = _DoctorRepository.GetAllDoctors().ToList();
 
             if (!string.IsNullOrEmpty(filterString))
             {
                 doctorEntities = doctorEntities
-                    .Where(x => x.FirstName.Contains(filterString) || x.LastName.Contains(filterString));
+                    .Where(x => x.FirstName.Contains(filterString) || x.LastName.Contains(filterString))
+                    .ToList();
             }
 
             return _DtoMapper.Map(doctorEntities);
         }
 
-        public IEnumerable<PrescriptionDto> GetAllPrescriptionForADoctor(int doctorId, string filterString)
+        public List<PrescriptionDto> GetAllPrescriptionForADoctor(int doctorId, string filterString)
         {
-            var prescriptionEntities = _PrescriptionRepository.GetAllPrescriptions().Where(x => x.DoctorId == doctorId);
+            var prescriptionEntities = _PrescriptionRepository.GetAllPrescriptions().Where(x => x.DoctorId == doctorId).ToList();
 
             if (!string.IsNullOrEmpty(filterString))
             {
                 prescriptionEntities = prescriptionEntities
-                    .Where(x => x.Name.Contains(filterString));
+                    .Where(x => x.Name.Contains(filterString))
+                    .ToList();
             }
 
             return _DtoMapper.Map(prescriptionEntities);
         }
 
-        public IEnumerable<MedicineDto> GetAllMedicineForAPrescription(int prescriptionId, string filterString)
+        public List<MedicineDto> GetAllMedicineForAPrescription(int prescriptionId, string filterString)
         {
-            var medicineEntities = _MedicineRepository.GetAllMedicines().Where(x => x.PrescriptionId == prescriptionId);
+            var medicineEntities = _MedicineRepository.GetAllMedicines().Where(x => x.PrescriptionId == prescriptionId).ToList();
 
             if (!string.IsNullOrEmpty(filterString))
             {
                 medicineEntities = medicineEntities
                     .Where(x => x.Name.Contains(filterString) ||
                                 x.CompanyName.Contains(filterString) ||
-                                x.ActiveSubstance.Contains(filterString));
+                                x.ActiveSubstance.Contains(filterString))
+                    .ToList();
             }
 
             return _DtoMapper.Map(medicineEntities);

@@ -20,7 +20,19 @@
                     Id
                 </th>
                 <th scope="col">
-                    Name
+                    FirstName
+                </th>
+                <th scope="col">
+                    LastName
+                </th>
+                <th scope="col">
+                    PhoneNumber
+                </th>
+                <th scope="col">
+                    WorkYears
+                </th>
+                <th scope="col">
+                    IsAbleToMakePrescriptions
                 </th>
                 <th scope="col">
                     Action
@@ -32,7 +44,11 @@
             {
                 <tr>
                     <th scope="row">@doctor.Id</th>
-                    <td>@doctor.FirstName @doctor.LastName</td>
+                    <td>@doctor.FirstName</td>
+                    <td>@doctor.LastName</td>
+                    <td>@doctor.PhoneNumber</td>
+                    <td>@doctor.WorkYears</td>
+                    <td>@doctor.IsAbleToMakePrescriptions</td>
                     <td>
                         <a asp-area="" asp-controller="Home" asp-action="View" asp-route-doctorId="@doctor.Id">View</a> 
                         | 

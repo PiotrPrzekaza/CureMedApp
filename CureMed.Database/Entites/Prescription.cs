@@ -16,6 +16,6 @@ namespace CureMed.Database.Entites
         public virtual Doctor Doctor { get; set; }
 
         [NotMapped]
-        public virtual IEnumerable<Medicine> Medicines { get; set; }
+        public virtual List<Medicine> Medicines { get; set; }
     }
 }

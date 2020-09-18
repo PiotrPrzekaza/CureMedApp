@@ -4,8 +4,14 @@
 }
 
 <div>
-    Doctor's data:
-    Name: @Model.Name
+    Doctor's data:<br/>
+    Id: @Model.Id<br />
+    First Name: @Model.FirstName<br />
+    Last Name: @Model.LastName<br />
+    Phone number: @Model.PhoneNumber<br />
+    Work Years: @Model.WorkYears<br />
+    Can make prescription?: @Model.IsAbleToMakePrescriptions<br />
+    
 </div>
 <form asp-controller="Prescription" asp-action="Index">
     <input type="text" name="ContentSearch" />
@@ -24,6 +30,9 @@
                     Name
                 </th>
                 <th scope="col">
+                   CreatedDate
+                </th>
+                <th scope="col">
                     Action
                 </th>
             </tr>
@@ -34,6 +43,7 @@
                 <tr>
                     <th scope="row">@prescription.Id</th>
                     <td>@prescription.Name</td>
+                    <td>@prescription.CraetedDate</td>
                     <td>
                         <a asp-area="" asp-controller="Prescription" asp-action="View" asp-route-prescriptionId="@prescription.Id">View</a>
                         |

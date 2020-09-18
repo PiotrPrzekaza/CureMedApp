@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CureMed.Database
 {
-    public abstract class  BaseRepository<Entity> where Entity : BaseEntity
+    public abstract class BaseRepository<Entity> : IRepository<Entity> where Entity : BaseEntity
     {
         protected CureMedAppDbContext _DbContext;
 

@@ -49,7 +49,7 @@ namespace CureMed.Controllers
             _DoctorManager.DeleteDoctor(new DoctorDto{ Id=doctorId});
             var doctorDtos = _DoctorManager.GetAllDoctors(null);
             var doctorViewModel = _ViewModelMapper.Map(doctorDtos);
-            return View(doctorViewModel);
+            return View("Index", doctorViewModel);
         }
     }
 }

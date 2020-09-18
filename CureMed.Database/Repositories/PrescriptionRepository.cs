@@ -15,7 +15,7 @@ namespace CureMed.Database
         }
         public IEnumerable<Prescription> GetAllPrescriptions()
         {
-            return DbSet.Include(x => x.Medicines).Select(x => x);
+            return DbSet.Select(x => x);
         }
     }
 }
